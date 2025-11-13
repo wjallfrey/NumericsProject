@@ -175,30 +175,31 @@ def stability(resolution): #checks for stability via energy increase over a grid
     plt.title("plot of the boundary of stability in the c,d parameter space - stable inside the region")
 
 #plots: 
-FTCS(0.1,1,1000,100,False,False,True,False) #F1
+if __name__=="__main__":       
+    FTCS(0.1,1,1000,100,False,False,True,False) #F1
 
-VNstability(400) #F2
-stability(25) #F3 NOTE: For the plot in report resolution of 100 was used. Here we use 25 to save time.
+    VNstability(400) #F2
+    stability(25) #F3 For the plot in report resolution of 100 was used. Here we use 25 to save time.
 
-FTCS(0.004,0,100,150,True,False,False,False) #F4
-FTCS(0.004,1,100,150,True,False,False,False)
-FTCS(0.004,2,200,150,True,False,False,False)
-FTCS(0.004,3,300,150,True,False,False,False)
-FTCS(0.004,7,700,150,True,False,False,False)
-FTCS(0.004,10,1000,150,True,False,False,False)
+    FTCS(0.004,0,100,150,True,False,False,False) #F4
+    FTCS(0.004,1,100,150,True,False,False,False)
+    FTCS(0.004,2,200,150,True,False,False,False)
+    FTCS(0.004,3,300,150,True,False,False,False)
+    FTCS(0.004,7,700,150,True,False,False,False)
+    FTCS(0.004,10,1000,150,True,False,False,False)
 
-plt.figure()
-FTCS(0.1,1,1000,100,False,False,True,False) #F5
-FFT(0.1,1,1000,100,True,False)
-plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.1,N_t=1000,N_x=100")
-plt.figure()
-FTCS(0.01,1,1000,100,False,False,True,False) #F5
-FFT(0.01,1,1000,100,True,False)
-plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.01,N_t=1000,N_x=100")
+    plt.figure()
+    FTCS(0.1,1,1000,100,False,False,True,False) #F5
+    FFT(0.1,1,1000,100,True,False)
+    plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.1,N_t=1000,N_x=100")
+    plt.figure()
+    FTCS(0.01,1,1000,100,False,False,True,False) #F5
+    FFT(0.01,1,1000,100,True,False)
+    plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.01,N_t=1000,N_x=100")
 
-analytic=analyticSol(0.1,1,100000,800)
-errors(0.1,1,800,30,np.pi,analytic,np.linspace(100,800,8),"FTCS",True) #F6,7,8
+    analytic=analyticSol(0.1,1,100000,800)
+    errors(0.1,1,800,30,np.pi,analytic,np.linspace(100,800,8),"FTCS",True) #F6,7,8
 
-FTCS(0.1,1,1000,100,False,False,False,True) #massplot1 F9
-FTCS(0.1,1,1000,400,False,False,False,True) #massplot2 F10
-plt.show()  
+    FTCS(0.1,1,1000,100,False,False,False,True) #massplot1 F9
+    FTCS(0.1,1,1000,400,False,False,False,True) #massplot2 F10
+    plt.show()  
