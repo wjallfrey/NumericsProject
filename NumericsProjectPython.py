@@ -58,7 +58,7 @@ def FTCS(nu,T,NT,N,plotting,stabilityTest,multiplot,massplot):
         return(currentphi)
 
 
-def FFT(nu,T,NT,N,plotting): #FFT scheme
+def FFT(nu,T,NT,N,plotting,massplot): #FFT scheme
     L = np.pi
     deltat=T/NT
     xgrid = np.linspace(0, L, N + 1)
@@ -66,6 +66,11 @@ def FFT(nu,T,NT,N,plotting): #FFT scheme
     deltax = L / N
     mass=[]
     currentphifft=initialphi
+    if plotting:
+        #plt.figure()
+        plt.plot(xgrid, initialphi, color='red')
+        plt.xlabel("x")
+        plt.ylabel("phi")
     k=2*np.concatenate((np.linspace(0,0,1),np.linspace(1,N//2,N//2),np.linspace(-N//2,-1,N//2)))
     ik=1j*k
     k2=k**2
@@ -77,13 +82,8 @@ def FFT(nu,T,NT,N,plotting): #FFT scheme
         currentphifft=newphi
         mass.append(deltax*sum(currentphifft))
         if plotting and i % (NT // 10) == 0: #plot the solution at 10 evenly spaced times.
-            plt.plot(xgrid, newphi, color='blue')
-    if plotting:
-        plt.figure()
-        plt.plot(xgrid, initialphi, color='blue')
-        plt.plot(xgrid,currentphifft)
-        plt.xlabel("x")
-        plt.ylabel("phi")
+            plt.plot(xgrid, newphi, color='red')
+    if massplot:
         plt.figure()
         plt.plot(np.linspace(0,T,NT),mass)
         plt.xlabel("time")
@@ -115,7 +115,7 @@ def interpolateanalytic(analyticSol,maxN,N): #interpolates analyticSol from an x
     return(interpolatedSol)
 
 def analyticSol(nu,T,NT,maxN):
-    return(FFT(nu,T,NT,maxN,False))
+    return(FFT(nu,T,NT,maxN,False,False))
 
 def errors(nu,T,maxN,invc,L,analyticSol,Nrange,scheme,plotting): #gives the errors between interpolated analyticSol and the numerical method using scheme (FFT or FTCS) over a range of NX 
     errorsl1=[]
@@ -126,7 +126,7 @@ def errors(nu,T,maxN,invc,L,analyticSol,Nrange,scheme,plotting): #gives the erro
     for N in Nrange:
         N=int(N)
         if scheme=="FFT":
-            t1solution=FFT(nu,T,invc*N,N,False)
+            t1solution=FFT(nu,T,invc*N,N,False,False)
         elif scheme=="FTCS":
             t1solution=FTCS(nu,T,invc*N,N,False,False,False,False)
         else:
@@ -176,6 +176,10 @@ def stability(resolution): #checks for stability via energy increase over a grid
 
 #plots: 
 FTCS(0.1,1,1000,100,False,False,True,False) #F1
+
+VNstability(400) #F2
+stability(25) #F3 NOTE: For the plot in report resolution of 100 was used. Here we use 25 to save time.
+
 FTCS(0.004,0,100,150,True,False,False,False) #F4
 FTCS(0.004,1,100,150,True,False,False,False)
 FTCS(0.004,2,200,150,True,False,False,False)
@@ -183,12 +187,18 @@ FTCS(0.004,3,300,150,True,False,False,False)
 FTCS(0.004,7,700,150,True,False,False,False)
 FTCS(0.004,10,1000,150,True,False,False,False)
 
-VNstability(400) #F2
-stability(25) #F3 NOTE: For the plot in report resolution of 100 was used. Here we use 25 to save time.
+plt.figure()
+FTCS(0.1,1,1000,100,False,False,True,False) #F5
+FFT(0.1,1,1000,100,True,False)
+plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.1,N_t=1000,N_x=100")
+plt.figure()
+FTCS(0.01,1,1000,100,False,False,True,False) #F5
+FFT(0.01,1,1000,100,True,False)
+plt.title("Regular time interval plot of FFT in red and FTCS in blue for nu=0.01,N_t=1000,N_x=100")
 
 analytic=analyticSol(0.1,1,100000,800)
-errors(0.1,1,800,30,np.pi,analytic,np.linspace(100,800,8),"FTCS",True) #F5,6,7
+errors(0.1,1,800,30,np.pi,analytic,np.linspace(100,800,8),"FTCS",True) #F6,7,8
 
-FTCS(0.1,1,1000,100,False,False,False,True) #massplot1 F8
-FTCS(0.1,1,1000,400,False,False,False,True) #massplot2 F9
+FTCS(0.1,1,1000,100,False,False,False,True) #massplot1 F9
+FTCS(0.1,1,1000,400,False,False,False,True) #massplot2 F10
 plt.show()  
